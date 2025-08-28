@@ -1,0 +1,118 @@
+<div class="card" style="max-width:900px;margin:24px auto;">
+    <h2>Add Product (Admin)</h2>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" style="display:grid; gap:12px;">
+
+        <!-- Core -->
+        <input class="input" placeholder="Name" formControlName="name" />
+        <input class="input" placeholder="Slug" formControlName="slug" />
+        <input class="input" placeholder="Brand" formControlName="brand" />
+        <input class="input" placeholder="Price" type="number" formControlName="price" />
+        <input class="input" placeholder="Category" formControlName="category" />
+        <textarea class="input" rows="3" placeholder="Description" formControlName="description"></textarea>
+
+        <!-- Media -->
+        <input class="input" placeholder="Cover Image URL" formControlName="image" />
+
+        <!-- Gallery Images -->
+        <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+                <b>Gallery Images</b>
+                <button type="button" class="btn ghost" (click)="addImage()">+ Add image</button>
+            </div>
+            <div *ngFor="let ctrl of imagesFA.controls; index as i" style="display:flex; gap:8px; margin-top:8px;">
+                <input class="input" [formControl]="ctrl" placeholder="https://example.com/angle.jpg" />
+                <button type="button" class="btn ghost" (click)="removeImage(i)">Remove</button>
+            </div>
+        </div>
+
+        <!-- Tags -->
+        <div class="card">
+            <div style="display:flex;justify-content:space-between;">
+                <b>Tags</b>
+                <button type="button" class="btn ghost" (click)="addTag()">+ Add tag</button>
+            </div>
+            <div *ngFor="let ctrl of tagsFA.controls; index as i" style="display:flex; gap:8px; margin-top:8px;">
+                <input class="input" [formControl]="ctrl" placeholder="e.g. women" />
+                <button type="button" class="btn ghost" (click)="removeTag(i)">Remove</button>
+            </div>
+        </div>
+
+        <!-- Stock + Rating -->
+        <input class="input" placeholder="Stock" type="number" formControlName="stock" />
+        <input class="input" placeholder="Rating" type="number" formControlName="rating" />
+
+        <!-- Specs -->
+        <div class="card">
+            <div style="display:flex;justify-content:space-between;">
+                <b>Specs (key/value)</b>
+                <button type="button" class="btn ghost" (click)="addSpec()">+ Add spec</button>
+            </div>
+            <div *ngFor="let g of specsFA.controls; index as i" [formGroup]="g"
+                style="display:grid; grid-template-columns:1fr 2fr auto; gap:8px; margin-top:8px;">
+                <input class="input" formControlName="key" placeholder="Upper" />
+                <input class="input" formControlName="value" placeholder="Mesh" />
+                <button type="button" class="btn ghost" (click)="removeSpec(i)">Remove</button>
+            </div>
+        </div>
+
+        <!-- Variants -->
+        <div class="card">
+            <div style="margin-bottom:8px">
+                <button type="button" class="btn ghost" (click)="addVariant()">+ Add variant</button>
+            </div>
+
+            <div formArrayName="variants">
+                <div *ngFor="let v of variantsFA.controls; index as vi" [formGroupName]="vi" class="card"
+                    style="margin-top:10px;">
+
+                    <input class="input" formControlName="color" placeholder="Color (e.g. Black/Stone)" />
+
+                    <!-- Variant images -->
+                    <div class="card" style="margin-top:8px;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <b>Variant images</b>
+                            <button type="button" class="btn ghost" (click)="addVariantImage(vi)">+ Add image</button>
+                        </div>
+                        <div formArrayName="images">
+                            <div *ngFor="let ic of imagesFAv(vi).controls; index as ii"
+                                style="display:flex; gap:8px; margin-top:8px;">
+                                <input class="input" [formControlName]="ii" placeholder="https://..." />
+                                <button type="button" class="btn ghost"
+                                    (click)="removeVariantImage(vi, ii)">Remove</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Variant sizes -->
+                    <div class="card" style="margin-top:8px;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <b>Sizes</b>
+                            <button type="button" class="btn ghost" (click)="addSize(vi)">+ Add size</button>
+                        </div>
+                        <div formArrayName="sizes">
+                            <div *ngFor="let sg of sizesFAv(vi).controls; index as si" [formGroupName]="si"
+                                style="display:grid; grid-template-columns:1fr 1fr auto; gap:8px; margin-top:8px;">
+                                <input class="input" formControlName="label" placeholder="US 6" />
+                                <input class="input" formControlName="stock" type="number" placeholder="Stock" />
+                                <button type="button" class="btn ghost" (click)="removeSize(vi, si)">Remove</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="text-align:right; margin-top:8px">
+                        <button type="button" class="btn ghost" (click)="removeVariant(vi)">Delete variant</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Single Create button -->
+        <div style="margin-top:16px">
+            <button class="btn" type="submit">Create</button>
+        </div>
+
+        <p *ngIf="msg" style="margin-top:8px;">{{ msg }}</p>
+    </form>
+</div>

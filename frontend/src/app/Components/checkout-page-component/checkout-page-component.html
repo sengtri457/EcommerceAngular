@@ -1,0 +1,30 @@
+<div class="grid cols-2">
+    <form class="card" (submit)="$event.preventDefault(); place()">
+        <h2 style="margin-top:0;">Checkout</h2>
+        <input class="input" placeholder="Full name" [(ngModel)]="name" name="name" required
+            style="margin-bottom:8px;" />
+        <input class="input" placeholder="Email" [(ngModel)]="email" name="email" required type="email"
+            style="margin-bottom:8px;" />
+        <textarea class="input" placeholder="Address" [(ngModel)]="address" name="address" required rows="4"
+            style="margin-bottom:8px;"></textarea>
+        <button class="btn" [disabled]="placing" type="submit">{{ placing ? 'Placing…' : 'Place order' }}</button>
+        <p *ngIf="success" style="color:#9f9;">{{ success }}</p>
+        <p *ngIf="error" style="color:#f99;">{{ error }}</p>
+    </form>
+
+
+    <div class="card">
+        <h3 style="margin-top:0;">Order Summary</h3>
+        <div *ngIf="(cart.items$ | async) as items">
+            <div *ngFor="let it of items"
+                style="display:flex;justify-content:space-between;border-bottom:1px solid var(--line);padding:6px 0;">
+                <span>{{ it.product.name }} × {{ it.qty }}</span>
+                <span class="price">${{ it.product.price * it.qty }}</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:8px;">
+                <span>Total</span>
+                <span class="price">${{ cart.total() + (cart.total() > 100 ? 0 : 8) }}</span>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,32 @@
+.custom-cursor {
+    position: fixed;
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    mix-blend-mode: difference;
+    transition: transform 0.1s ease;
+    transform: translate(-50%, -50%);
+}
+
+.custom-cursor.hover {
+    transform: translate(-50%, -50%) scale(2);
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.custom-cursor.click {
+    transform: translate(-50%, -50%) scale(0.8);
+}
+
+/* Hide default cursor on body when this component is active */
+:host-context(body) {
+    cursor: none;
+}
+
+/* Alternative cursor styles */
+.custom-cursor.dark-mode {
+    background: #000;
+    mix-blend-mode: exclusion;
+}

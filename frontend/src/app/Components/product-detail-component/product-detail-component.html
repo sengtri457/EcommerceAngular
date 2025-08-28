@@ -1,0 +1,90 @@
+<div *ngIf="product" class="grid cols-2 card" style="gap:16px;align-items:start;">
+    <!-- Gallery / Carousel -->
+    <div>
+        <div class="carousel" #strip (wheel)="onWheel($event, strip)">
+            <img *ngFor="let img of gallery; trackBy:track" class="carousel__img" [src]="img" [alt]="product.name" />
+        </div>
+        <div class="thumbs">
+            <img *ngFor="let img of gallery; trackBy:track" class="thumbnail" [class.sel]="img===activeImg" [src]="img"
+                [alt]="product.name" (click)="activeImg = img; scrollToActive(strip, img)" />
+        </div>
+    </div>
+
+    <!-- Info / Variants -->
+    <div>
+        <div style="display:flex;gap:8px;align-items:center;">
+            <span class="badge">{{ product.brand || 'Monochrome' }}</span>
+            <span class="badge" *ngIf="product.rating">★ {{ product.rating | number:'1.1-1' }}</span>
+        </div>
+
+        <h2 style="margin:8px 0 4px 0; font-size:28px;">{{ product.name }}</h2>
+        <div class="badge" style="margin-bottom:8px;">{{ product.category }}</div>
+        <p style="color:var(--muted);margin:0 0 12px 0;">{{ product.description }}</p>
+
+        <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:12px;">
+            <div class="price" style="font-size:28px;">${{ product.price }}</div>
+            <div *ngIf="qty>1" style="color:var(--muted);">
+                × {{ qty }} = <b class="price">${{ product.price * qty }}</b>
+            </div>
+        </div>
+
+        <!-- Color -->
+        <div *ngIf="product.variants?.length" style="margin-bottom:10px;">
+            <div style="font-weight:600;margin-bottom:6px;">Color</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <button class="btn ghost" *ngFor="let v of product.variants" [class.sel]="color===v.color"
+                    (click)="selectColor(v.color)">
+                    {{ v.color }}
+                </button>
+            </div>
+        </div>
+
+        <!-- Size -->
+        <div *ngIf="sizes?.length">
+            <div style="font-weight:600;margin-bottom:6px;">Size</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <button class="btn ghost" *ngFor="let s of sizes" [disabled]="s.stock<=0" [class.sel]="size===s.label"
+                    (click)="size=s.label">
+                    {{ s.label }}
+                    <span *ngIf="s.stock<=0" class="badge">Sold out</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Qty + Add -->
+        <div style="display:flex;gap:8px;align-items:center;margin-top:12px;">
+            <input class="input" type="number" [(ngModel)]="qty" min="1" style="width:120px;">
+            <button class="btn" [disabled]="qty<1 || !canAdd()" (click)="add()">
+                Add to cart
+            </button>
+        </div>
+
+        <!-- Specs (optional) -->
+        <div *ngIf="product.specs" class="card" style="margin-top:12px;">
+            <details open>
+                <summary style="cursor:pointer;font-weight:700;">Product details</summary>
+                <div style="margin-top:8px;display:grid;grid-template-columns:1fr 2fr;gap:8px;">
+                    <ng-container *ngFor="let kv of (product.specs | keyvalue)">
+                        <div style="color:var(--muted)">{{ kv.key }}</div>
+                        <div>{{ kv.value }}</div>
+                    </ng-container>
+                </div>
+            </details>
+        </div>
+    </div>
+</div>
+
+
+<!-- <div *ngIf="product" class="grid cols-2 card">
+    <img class="thumbnail" [src]="product.image" [alt]="product.name" />
+    <div>
+        <h2 style="margin:0 0 8px 0;">{{ product.name }}</h2>
+        <div class="badge" style="margin-bottom:8px;">{{ product.category }}</div>
+        <div style="color:var(--muted);margin-bottom:12px;">{{ product.description }}</div>
+        <div class="price" style="font-size:24px;margin-bottom:12px;">${{ product.price }}</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+            <input class="input" type="number" [(ngModel)]="qty" min="0" style="width:120px;" />
+            <button class="btn" (click)="add()">Add to cart</button>
+        </div>
+    </div>
+</div> -->

@@ -1,0 +1,12 @@
+<div class="grid cols-4" style="gap:12px;">
+    <div class="card" style="grid-column: span 3;">
+        <div style="position:relative; overflow:hidden; border-radius:12px;">
+            <img class="thumbnail" [src]="active" (mousemove)="onZoom($event)" (mouseleave)="zoom=0"
+                [style.transform]="zoom ? 'scale(1.15)' : 'scale(1)'" style="transition:transform .2s;" />
+        </div>
+    </div>
+    <div class="grid" style="gap:8px;">
+        <img *ngFor="let img of gallery" class="thumbnail" [class.sel]="img===active" [src]="img" (click)="active=img"
+            style="cursor:pointer; border-width:2px;" />
+    </div>
+</div>

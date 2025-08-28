@@ -1,0 +1,12 @@
+<div class="card" style="max-width:400px;margin:40px auto;">
+    <h2>Login</h2>
+    <form (submit)="login($event)">
+        <input class="input" placeholder="Email" [(ngModel)]="email" name="email" type="email" required>
+        <input class="input" placeholder="Password" [(ngModel)]="password" name="password" type="password" required>
+        <button class="btn" type="submit">Login</button>
+        <p *ngIf="msg" style="color:#f88">{{ msg }}</p>
+    </form>
+    <p style="margin-top:12px;">Don't have an account?
+        <a routerLink="/register" class="btn ghost">Register</a>
+    </p>
+</div>

@@ -1,0 +1,41 @@
+<div class="card">
+    <h2 style="margin-top:0;">Cart</h2>
+    <div *ngIf="(cart.items$ | async) as items; else empty">
+        <div *ngFor="let it of items; trackBy: trackById" class="grid cols-4"
+            style="align-items:center;border-bottom:1px solid var(--line);padding:8px 0;">
+            <div style="display:flex;gap:12px;align-items:center;">
+                <img class="thumbnail" [src]="it.product.image" [alt]="it.product.name"
+                    style="width:72px;height:72px;" />
+                <div>
+                    <div style="font-weight:600;">{{ it.product.name }}</div>
+                    <div class="badge">${{ it.product.price }}</div>
+                </div>
+            </div>
+            <div>
+                <input class="input" type="number" [ngModel]="it.qty"
+                    (ngModelChange)="cart.setQty(it.product._id, $event)" min="0" />
+            </div>
+            <div class="price">${{ it.product.price * it.qty }}</div>
+            <div><button class="btn ghost" (click)="cart.remove(it.product._id)">Remove</button></div>
+        </div>
+
+
+        <div style="display:flex;justify-content:flex-end;gap:16px;margin-top:16px;">
+            <div class="card" style="min-width:280px;">
+                <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+                    <span>Subtotal</span><span class="price">${{ cart.total() }}</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;margin-bottom:8px;color:var(--muted);">
+                    <span>Shipping</span><span>$ {{ cart.total() > 100 ? 0 : 8 }}</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;font-weight:700;">
+                    <span>Total</span><span>${{ cart.total() + (cart.total() > 100 ? 0 : 8) }}</span>
+                </div>
+                <a routerLink="/checkout" class="btn" style="width:100%;margin-top:12px;">Checkout</a>
+            </div>
+        </div>
+    </div>
+    <ng-template #empty>
+        <p>Your cart is empty.</p>
+    </ng-template>
+</div>

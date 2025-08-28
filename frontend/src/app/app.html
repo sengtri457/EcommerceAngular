@@ -1,0 +1,31 @@
+<header class="header">
+  <div class="container inner">
+    <div class="logo">MONOCHROME</div>
+    <div class="spacer"></div>
+    @if (auth.isLoggedIn()) {
+    <span class="badge">Hi, {{ auth.auth?.user?.name }}</span>
+    }
+    <a routerLink="/" class="btn ghost">Home</a>
+    <a routerLink="/cart" class="btn">Cart</a>
+    <!-- in app.component.html -->
+    @if (auth.isAdmin()) {
+    <a routerLink="/admin" class="btn ghost">Admin</a>
+    }
+    @if (!auth.isLoggedIn()) {
+    <a routerLink="/login" class="btn ghost">Login</a>
+    }
+    @if (!auth.isLoggedIn()) {
+    <a routerLink="/register" class="btn ghost">Register</a>
+    }
+    @if (auth.isLoggedIn()) {
+    <a (click)="logout()" class="btn ghost">Logout</a>
+    }
+
+  </div>
+</header>
+<main class="container" style="padding:24px 0;">
+  <router-outlet />
+</main>
+<footer class="footer container">
+  <div>©Monochrome — Ultra‑minimal commerce in black & white.</div>
+</footer>

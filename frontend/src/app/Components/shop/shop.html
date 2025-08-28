@@ -1,0 +1,74 @@
+<section class="filters card" style="margin-top:16px;" id="product">
+    <div class="grid cols-4">
+        <input class="input" placeholder="Search" [(ngModel)]="q" (keyup.enter)="page=1;fetch()" />
+        <select class="select" [(ngModel)]="category" (change)="page=1;fetch()">
+            <option value="">All Categories</option>
+            <option value="apparel">Apparel</option>
+            <option value="shoes">Shoes</option>
+            <option value="accessories">Accessories</option>
+        </select>
+        <select class="select" [(ngModel)]="sort" (change)="page=1;fetch()">
+            <option value="createdAt">Newest</option>
+            <option value="price">Price</option>
+            <option value="rating">Rating</option>
+        </select>
+        <select class="select" [(ngModel)]="order" (change)="page=1;fetch()">
+            <option value="desc">Desc</option>
+            <option value="asc">Asc</option>
+        </select>
+    </div>
+</section>
+<section class="products" style="margin-top:16px;">
+
+    <!-- Case 1 + 2: data or noData -->
+    <ng-container *ngIf="!loading; else loadingTpl">
+        <!-- Products exist -->
+        <div *ngIf="products.length > 0; else noData" class="grid cols-4">
+            <a *ngFor="let p of products" [routerLink]="['/product', p._id]" class="card"
+                style="text-decoration:none;color:inherit;">
+                <img class="thumbnail" [src]="p.image" [alt]="p.name" />
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;">
+                    <div>
+                        <div style="font-weight:700;">{{ p.name }}</div>
+                        <div class="badge">{{ p.category }}</div>
+                    </div>
+                    <div class="price">${{ p.price }}</div>
+                </div>
+                <button class="btn" style="margin-top:8px;width:100%;" [disabled]="!auth.isLoggedIn()"
+                    (click)="$event.preventDefault(); auth.isLoggedIn() && addToCart(p)">
+                    Add to cart
+                </button>
+            </a>
+        </div>
+    </ng-container>
+
+    <!-- Skeletons -->
+    <ng-template #loadingTpl>
+        <div class="grid cols-4 gap-4">
+            <ng-container *ngFor="let i of [1,2,3,4]">
+                <div class="card">
+                    <div class="skeleton thumb"></div>
+                    <div style="padding:12px;">
+                        <div class="skeleton line" style="width:70%; height:16px;"></div>
+                        <div class="skeleton line" style="width:40%; height:14px; margin-top:8px;"></div>
+                        <div class="skeleton btn" style="margin-top:12px;"></div>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </ng-template>
+
+    <!-- No data message -->
+    <ng-template #noData>
+        <div
+            class="col-span-full flex flex-col items-center justify-center py-16 text-center animate__animated animate__shakeX">
+            <h2>⚠️</h2>
+            <h3 class=" mb-2">Oops! Something went wrong</h3>
+            <p class="">Failed to load recent Product. Please try again later.</p><button class="btn"><a href="/shop"
+                    class="text-decoration-none text-white">
+                    Try Again
+                </a></button>
+        </div>
+    </ng-template>
+
+</section>

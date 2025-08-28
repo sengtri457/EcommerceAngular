@@ -1,0 +1,47 @@
+/* product-detail.component.scss */
+.carousel {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 100%;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    border-radius: 12px;
+    scrollbar-width: none;
+}
+
+.carousel::-webkit-scrollbar {
+    display: none;
+}
+
+.carousel__img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    scroll-snap-align: start;
+    border-radius: 12px;
+}
+
+.thumbs {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+}
+
+.thumbnail {
+    width: 72px;
+    height: 72px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 2px solid var(--line);
+    cursor: pointer;
+}
+
+.thumbnail.sel {
+    border-color: #fff;
+    transform: translateY(-1px);
+}
+
+.btn.sel {
+    border-color: #fff;
+}
