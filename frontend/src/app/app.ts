@@ -1,25 +1,18 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { Authservice } from './services/auth/authservice';
-import { Customcusor } from './Components/customcusor/customcusor';
+import { Service } from './services/service';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink, Customcusor],
+  imports: [RouterOutlet, RouterLink, FormsModule, CommonModule],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
-export class App implements AfterViewInit {
-  constructor(public auth: Authservice) {}
-  protected title = 'ECommerceShop';
-  @ViewChild('customCursor') customCursor!: Customcusor;
-
-  private isDarkMode = false;
-  private isColoredMode = false;
-
-  ngAfterViewInit(): void {
-    // Component is ready to use
-  }
+export class App {
+  constructor(public auth: Authservice, public api: Service) {}
   logout() {
     this.auth.auth = null;
   }

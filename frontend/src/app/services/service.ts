@@ -75,4 +75,10 @@ export class Service {
       `${this.base}/products/${id}/related`
     );
   }
+
+  isshake: boolean = false;
+  clickShake() {
+    this.isshake = !this.isshake;
+    return this.isshake ? 'animate__shakeX' : '';
+  }
 }

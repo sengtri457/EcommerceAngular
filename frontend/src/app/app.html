@@ -6,7 +6,7 @@
     <span class="badge">Hi, {{ auth.auth?.user?.name }}</span>
     }
     <a routerLink="/" class="btn ghost">Home</a>
-    <a routerLink="/cart" class="btn">Cart</a>
+    <a routerLink="/cart" class="btn animate__animated" [ngClass]="{ 'animate__shakeX': api.isshake }">Cart</a>
     <!-- in app.component.html -->
     @if (auth.isAdmin()) {
     <a routerLink="/admin" class="btn ghost">Admin</a>

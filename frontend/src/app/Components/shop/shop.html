@@ -24,8 +24,10 @@
     <ng-container *ngIf="!loading; else loadingTpl">
         <!-- Products exist -->
         <div *ngIf="products.length > 0; else noData" class="grid cols-4">
-            <a *ngFor="let p of products" [routerLink]="['/product', p._id]" class="card"
-                style="text-decoration:none;color:inherit;">
+            <a *ngFor="let p of products" [routerLink]="auth.isLoggedIn() ? ['/product', p._id] : null" class="card"
+                style="text-decoration:none;color:inherit;" [class.disabled]="!auth.isLoggedIn()"
+                [attr.tabindex]="auth.isLoggedIn() ? 0 : -1"
+                (click)="!auth.isLoggedIn() ? $event.preventDefault() : null">
                 <img class="thumbnail" [src]="p.image" [alt]="p.name" />
                 <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;">
                     <div>
@@ -38,7 +40,13 @@
                     (click)="$event.preventDefault(); auth.isLoggedIn() && addToCart(p)">
                     Add to cart
                 </button>
+                @if (auth.isAdmin()) {
+                <button class="btn danger" style="margin-top:8px; width:100%;" (click)="deleteProduct(p._id)">
+                    🗑 Delete
+                </button>
+                }
             </a>
+
         </div>
     </ng-container>
 

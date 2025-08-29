@@ -53,6 +53,7 @@ export class ProductDetailComponent implements OnInit {
   }
 
   canAdd() {
+    debugger;
     // if there are variants, both color and size must be chosen & in stock
     if (this.product?.variants?.length) {
       const s = this.sizes?.find((x) => x.label === this.size);
@@ -62,9 +63,11 @@ export class ProductDetailComponent implements OnInit {
   }
 
   add() {
+    debugger;
     if (!this.product) return;
     const sel = { color: this.color, size: this.size };
     this.cart.add(this.product, this.qty, sel);
+    this.api.clickShake();
     // optional: open your “added to bag” drawer
   }
 

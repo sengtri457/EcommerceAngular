@@ -64,4 +64,16 @@ export class Shop implements OnInit {
   addToCart(p: Product) {
     this.cart.add(p);
   }
+  deleteProduct(id: string) {
+    if (!confirm('Are you sure you want to delete this product?')) return;
+
+    this.api.deleteProduct(id).subscribe({
+      next: () => {
+        this.products = this.products.filter((p) => p._id !== id);
+      },
+      error: (err) => {
+        alert('Failed to delete: ' + (err?.error?.error || 'Server error'));
+      },
+    });
+  }
 }
