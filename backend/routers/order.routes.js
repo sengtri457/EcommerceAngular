@@ -9,6 +9,7 @@ const router = Router();
 
 router.post(
   "/",
+  authRequired,
   [
     body("items").isArray({ min: 1 }),
     body("items.*.productId").notEmpty().withMessage("productId is required"),
@@ -57,11 +58,13 @@ router.post(
       const total = subtotal + shipping;
 
       const order = await Order.create({
+        user: req.user.id, // from auth middleware
         items: normalized,
         subtotal,
         shipping,
         total,
         customer,
+        status: "paid", // in real life, you'd start with "pending" or "processing"
       });
 
       return res.json({ id: order._id, total, status: order.status });
@@ -76,10 +79,14 @@ router.post(
   }
 );
 
-router.get("/", authRequired, async (req, res) => {
-  // Example: list orders for authenticated user (admin gets all)
-  const filter = req.user.role === "admin" ? {} : { user: req.user.id };
-  const orders = await Order.find(filter).sort({ createdAt: -1 });
-  res.json(orders);
+// List orders (admin sees all, user sees only their own)
+router.get("/", authRequired, async (req, res, next) => {
+  try {
+    const filter = req.user.role === "admin" ? {} : { user: req.user.id };
+    const orders = await Order.find(filter).sort({ createdAt: -1 });
+    res.json(orders);
+  } catch (err) {
+    next(err);
+  }
 });
 module.exports = router;

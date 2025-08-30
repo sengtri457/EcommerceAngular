@@ -8,6 +8,9 @@ import { adminguardGuard } from './guard/adminguard-guard';
 import { LoginPage } from './auth/login-page/login-page';
 import { RegisterPage } from './auth/register-page/register-page';
 import { Shop } from './Components/shop/shop';
+import { CategoryPageComponent } from './Components/category-page-component/category-page-component';
+import { AdminUpdate } from './Components/admin-update/admin-update';
+import { AdminDashboard } from './Components/admin-dashboard/admin-dashboard';
 
 export const routes: Routes = [
   { path: '', component: HomePageComponent },
@@ -24,5 +27,20 @@ export const routes: Routes = [
   {
     path: 'shop',
     component: Shop,
+  },
+  {
+    path: 'c/:category',
+    component: CategoryPageComponent,
+  },
+  // canActivate: [AdminGuard]
+  {
+    path: 'admin/products/:id/edit',
+    component: AdminUpdate,
+    canActivate: [adminguardGuard],
+  },
+  // app.routes.ts
+  {
+    path: 'admin/dashboard',
+    component: AdminDashboard,
   },
 ];

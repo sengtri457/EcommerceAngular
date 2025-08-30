@@ -1,9 +1,22 @@
+<section class="banner">
+    <div class="container">
+        <div class="row position-relative">
+            <div class="col-12">
+                <h1>welcome Our Categort!!</h1>
+            </div>
+        </div>
+        <div class="wrapper-list">
+            <a routerLink="/c/shoes" class="btn ghost">Shoes</a>
+            <a routerLink="/c/Shirt" class="btn ghost">Shirt</a>
+        </div>
+    </div>
+</section>
 <section class="filters card" style="margin-top:16px;" id="product">
     <div class="grid cols-4">
         <input class="input" placeholder="Search" [(ngModel)]="q" (keyup.enter)="page=1;fetch()" />
         <select class="select" [(ngModel)]="category" (change)="page=1;fetch()">
             <option value="">All Categories</option>
-            <option value="apparel">Apparel</option>
+            <option value="Shirt">Shirt</option>
             <option value="shoes">Shoes</option>
             <option value="accessories">Accessories</option>
         </select>
@@ -19,10 +32,7 @@
     </div>
 </section>
 <section class="products" style="margin-top:16px;">
-
-    <!-- Case 1 + 2: data or noData -->
     <ng-container *ngIf="!loading; else loadingTpl">
-        <!-- Products exist -->
         <div *ngIf="products.length > 0; else noData" class="grid cols-4">
             <a *ngFor="let p of products" [routerLink]="auth.isLoggedIn() ? ['/product', p._id] : null" class="card"
                 style="text-decoration:none;color:inherit;" [class.disabled]="!auth.isLoggedIn()"
@@ -44,6 +54,10 @@
                 <button class="btn danger" style="margin-top:8px; width:100%;" (click)="deleteProduct(p._id)">
                     🗑 Delete
                 </button>
+                <button *ngIf="auth.isAdmin()" class="btn ghost" [routerLink]="['/admin/products', p._id, 'edit']">
+                    ✏️ Edit
+                </button>
+
                 }
             </a>
 
@@ -78,5 +92,9 @@
                 </a></button>
         </div>
     </ng-template>
-
+    <div style="display:flex;gap:8px;justify-content:center;margin-top:16px;">
+        <button class="btn ghost" [disabled]="page<=1" (click)="page=page-1;fetch()">Previous</button>
+        <div class="badge">Page {{page}} / {{pages}}</div>
+        <button class="btn ghost" [disabled]="page>=pages" (click)="page=page+1;fetch()">Next</button>
+    </div>
 </section>

@@ -18,21 +18,21 @@ const itemSchema = new mongoose.Schema(
 
 const orderSchema = new mongoose.Schema(
   {
-    user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    items: [itemSchema],
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }, // <-- required
+    items: [
+      {
+        product: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
+        name: String,
+        price: Number,
+        qty: Number,
+        image: String,
+      },
+    ],
+    customer: { name: String, email: String, address: String },
     subtotal: Number,
     shipping: Number,
     total: Number,
-    status: {
-      type: String,
-      enum: ["created", "paid", "shipped", "delivered"],
-      default: "created",
-    },
-    customer: {
-      name: String,
-      email: String,
-      address: String,
-    },
+    status: { type: String, default: "pending" },
   },
   { timestamps: true }
 );

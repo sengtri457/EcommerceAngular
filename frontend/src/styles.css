@@ -54,7 +54,6 @@ span {
 }
 
 .card {
-    width: 100%;
     background: #f2f2f2;
     background: linear-gradient(130deg, rgba(255, 255, 255, 0.5) 0%, rgba(65, 63, 63, 0.2) 12%, rgba(17, 17, 17, 1) 17%, rgba(21, 21, 21, 1) 100%);
     /* background: linear-gradient(180deg, var(--card), var(--card-2)); */
@@ -323,8 +322,4 @@ span {
     100% {
         transform: translateX(100%);
     }
-}
-
-.row {
-    flex-wrap: nowrap;
 }

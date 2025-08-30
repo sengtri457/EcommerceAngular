@@ -1,3 +1,4 @@
+import { RouterLink } from '@angular/router';
 import { Component } from '@angular/core';
 import { Service } from '../../services/service';
 import { CommonModule } from '@angular/common';
@@ -28,7 +29,7 @@ type VariantGroup = FormGroup<{
 }>;
 @Component({
   selector: 'app-adminpage',
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink],
   templateUrl: './adminpage.html',
   styleUrl: './adminpage.css',
 })

@@ -1,16 +1,15 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Product } from '../../models/products.models';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Service } from '../../services/service';
 import { Cartservice } from '../../services/cart/cartservice';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from 'express';
-import { ParoductGallery } from '../paroduct-gallery/paroduct-gallery';
 
 @Component({
   selector: 'app-product-detail-component',
-  imports: [CommonModule, FormsModule, ParoductGallery],
+  imports: [RouterLink, CommonModule, FormsModule],
   templateUrl: './product-detail-component.html',
   styleUrl: './product-detail-component.css',
 })

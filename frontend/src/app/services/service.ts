@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 export class Service {
   private base = environment.apiBase;
   constructor(private http: HttpClient) {}
+
   getProducts(
     params: {
       q?: string;
@@ -27,6 +28,8 @@ export class Service {
     page: number;
     pages: number;
   }> {
+    debugger;
+
     let p = new HttpParams();
     Object.entries(params).forEach(([k, v]) => {
       if (v !== undefined && v !== null) p = p.set(k, String(v));
@@ -80,5 +83,63 @@ export class Service {
   clickShake() {
     this.isshake = !this.isshake;
     return this.isshake ? 'animate__shakeX' : '';
+  }
+
+  // services/api.service.ts
+  listProducts(params: {
+    category?: string;
+    q?: string;
+    min?: number;
+    max?: number;
+    sort?: string;
+    order?: 'asc' | 'desc';
+    page?: number;
+    limit?: number;
+  }) {
+    const httpParams: any = {};
+    debugger;
+    for (const [k, v] of Object.entries(params)) {
+      if (v !== undefined && v !== null && v !== '') httpParams[k] = String(v);
+    }
+    return this.http.get<{
+      items: any[];
+      total: number;
+      page: number;
+      pages: number;
+    }>(`${this.base}/products`, { params: httpParams });
+  }
+  getAdminMetrics(params: { from?: string; to?: string } = {}) {
+    let hp = new HttpParams();
+    if (params.from) hp = hp.set('from', params.from);
+    if (params.to) hp = hp.set('to', params.to);
+    return this.http.get<{
+      range: any;
+      kpi: {
+        dailySales: number;
+        totalRevenue: number;
+        ordersCount: number;
+        revenueGrowthPct: number;
+      };
+      trend: { label: string; revenue: number }[];
+      productPerformance: {
+        _id: string;
+        name: string;
+        revenue: number;
+        qty: number;
+      }[];
+      topProduct: {
+        _id: string;
+        name: string;
+        revenue: number;
+        qty: number;
+      } | null;
+      table: {
+        productId: string;
+        product: string;
+        revenue: number;
+        qty: number;
+        growthPct: number | null;
+      }[];
+    }>(`${this.base}/admin/metrics`, { params: hp });
   }
 }

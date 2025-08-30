@@ -9,10 +9,14 @@ const productRoutes = require("./routers/product.routes");
 const orderRoutes = require("./routers/order.routes");
 const authRoutes = require("./routers/auth.routes");
 const cartRouts = require("./routers/cart.routes");
+const adminmatric = require("./routers/admin.matric.routes");
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
+
+// Mount admin metrics route
+app.use("/api/admin", adminmatric);
 
 app.get("/", (_req, res) => res.json({ ok: true }));
 

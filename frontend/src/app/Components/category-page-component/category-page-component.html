@@ -1,0 +1,104 @@
+<!-- pages/category-page/category-page.component.html -->
+<h2 style="margin:8px 0 16px 0; text-transform:capitalize;">
+    Welcome: {{ category }}
+</h2>
+<div class="wrapper-list">
+    <a routerLink="/c/shoes" class="btn ghost">Shoes</a>
+    <a routerLink="/c/Shirt" class="btn ghost">Shirt</a>
+</div>
+<!-- Sort control (optional) -->
+<div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;">
+    <select class="input" [ngModel]="sort+':'+order" (ngModelChange)="onSortChange($event)">
+        <option value="createdAt:desc">Newest</option>
+        <option value="price:asc">Price: Low → High</option>
+        <option value="price:desc">Price: High → Low</option>
+        <option value="rating:desc">Top Rated</option>
+        <option value="name:asc">Name A–Z</option>
+    </select>
+
+</div>
+
+<!-- Loading skeletons -->
+<ng-container *ngIf="loading; else loaded">
+    <div class="grid cols-4 gap-4">
+        <ng-container *ngFor="let i of [1,2,3,4,5,6,7,8,]">
+            <div class="card">
+                <div class="skeleton thumb"></div>
+                <div style="padding:12px;">
+                    <div class="skeleton line" style="width:70%; height:16px;"></div>
+                    <div class="skeleton line" style="width:40%; height:14px; margin-top:8px;"></div>
+                    <div class="skeleton btn" style="margin-top:12px;"></div>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</ng-container>
+
+<ng-template #loaded>
+    <ng-container *ngIf="products.length > 0; else noData">
+        <div class=" row gap-lg-3 gap-1 d-flex justify-content-center" [class.disabled]="!auth.isLoggedIn()"
+            [attr.tabindex]="auth.isLoggedIn() ? 0 : -1">
+            @for (p of products; track $index) {
+            <div class="col-lg-3 col-6 card mt-4">
+                <!-- Clickable area to open product (only when logged in) -->
+                <a *ngIf="auth.isLoggedIn(); else noLink" [routerLink]="['/product', p._id]"
+                    style="display:block; text-decoration:none; color:inherit;">
+                    <img class="thumbnail" [src]="p.image" [alt]="p.name" />
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;">
+                        <div>
+                            <div style="font-weight:700;">{{ p.name }}</div>
+                            <div class="badge">{{ p.category }}</div>
+                        </div>
+                        <div class="price">${{ p.price }}</div>
+                    </div>
+                </a>
+
+                <!-- When not logged in: same layout but not a link -->
+                <ng-template #noLink>
+                    <div style="display:block;">
+                        <img class="thumbnail" [src]="p.image" [alt]="p.name" />
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;">
+                            <div>
+                                <div style="font-weight:700;">{{ p.name }}</div>
+                                <div class="badge">{{ p.category }}</div>
+                            </div>
+                            <div class="price">${{ p.price }}</div>
+                        </div>
+                    </div>
+                </ng-template>
+
+                <!-- Actions -->
+                <button class="btn" style="margin-top:8px;width:100%;" [disabled]="!auth.isLoggedIn()"
+                    (click)="auth.isLoggedIn() && addToCart(p)">
+                    Add to cart
+                </button>
+
+                @if (auth.isAdmin()) {
+                <button class="btn danger" style="margin-top:8px; width:100%;" (click)="deleteProduct(p._id)">
+                    🗑 Delete
+                </button>
+
+                <!-- Use absolute routerLink and stop bubbling just in case -->
+                <button class="btn ghost" style="width:100%;margin-top: 8px;"
+                    [routerLink]="['/admin/products', p._id, 'edit']" (click)="$event.stopPropagation()">
+                    ✏️ Edit
+                </button>
+                }
+            </div>
+            }
+        </div>
+
+        <!-- Pagination (simple) -->
+        <div style="display:flex;gap:8px;justify-content:center;margin:16px 0;">
+            <button class="btn ghost" [disabled]="page<=1" (click)="goPage(page-1)">Prev</button>
+            <span style="align-self:center;">Page {{ page }}</span>
+            <button class="btn ghost" [disabled]="page*limit>=total" (click)="goPage(page+1)">Next</button>
+        </div>
+    </ng-container>
+</ng-template>
+
+<ng-template #noData>
+    <p style="text-align:center; margin-top:20px; color:var(--muted);">
+        🚫 No {{ category }} found.
+    </p>
+</ng-template>

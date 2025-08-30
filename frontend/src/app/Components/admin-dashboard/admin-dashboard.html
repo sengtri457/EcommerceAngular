@@ -1,0 +1,94 @@
+<!-- admin-dashboard.component.html -->
+<div class="dash">
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+        <h2>Admin Dashboard</h2>
+        <button class="btn ghost" (click)="fetch()">↻ Refresh</button>
+    </div>
+
+    <!-- KPIs -->
+    <div class="grid kpi" *ngIf="!loading; else loadingTpl">
+        <div class="card kpi-card">
+            <div class="muted">Daily Sales</div>
+            <div class="big">
+                ${{ (kpi?.dailySales || 0) | number:'1.0-0' }}
+            </div>
+            <div class="chip positive">
+                {{ (kpi?.revenueGrowthPct || 0) | number:'1.0-0' }}%
+            </div>
+        </div>
+
+        <div class="card kpi-card">
+            <div class="muted">Total Revenue</div>
+            <div class="big">${{ (kpi?.totalRevenue || 0) | number }}</div>
+        </div>
+
+        <div class="card kpi-card">
+            <div class="muted">Orders</div>
+            <div class="big">{{ (kpi?.ordersCount || 0) | number }}</div>
+        </div>
+
+        <div class="card kpi-card">
+            <div class="muted">Top Product</div>
+            <div class="big">{{ topProduct?.name || '—' }}</div>
+        </div>
+    </div>
+
+    <div class="grid charts mt-4" *ngIf="!loading">
+        <div class="card"> <!-- trend -->
+            <div class="title">Sales Trend (12 mo)</div>
+            <ng-container *ngIf="trend && trend.length; else noTrend">
+                <div class="chart-wrap"><canvas id="trendChart"></canvas></div>
+            </ng-container>
+            <ng-template #noTrend>
+                <div class="muted center" style="padding:24px">No trend data yet.</div>
+            </ng-template>
+        </div>
+
+        <div class="card"> <!-- donut -->
+            <div class="title">Top Products (Revenue)</div>
+            <ng-container *ngIf="perf && perf.length; else noPerf">
+                <div class="chart-wrap"><canvas id="perfChart"></canvas></div>
+            </ng-container>
+            <ng-template #noPerf>
+                <div class="muted center" style="padding:24px">Not enough product data yet.</div>
+            </ng-template>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="card mt-4" *ngIf="!loading">
+        <div class="title">Product Performance</div>
+        <table class="tbl">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th class="right">Revenue</th>
+                    <th class="right">Qty</th>
+                    <th class="right">Growth</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let r of table">
+                    <td>{{ r.product }}</td>
+                    <td class="right">${{ r.revenue | number }}</td>
+                    <td class="right">{{ r.qty | number }}</td>
+                    <td class="right">
+                        {{ r.growthPct === null ? '—' : (r.growthPct | number:'1.0-0') + '%' }}
+                    </td>
+                </tr>
+                <tr *ngIf="!table?.length">
+                    <td colspan="4" class="muted center">No rows to display.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Loading skeleton (full page overlay) -->
+<ng-template #loadingTpl>
+    <div class="overlay">
+        <div class="skeleton-grid">
+            <div class="sk-card" *ngFor="let i of [1,2,3,4,5,6]"></div>
+        </div>
+    </div>
+</ng-template>
